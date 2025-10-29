@@ -1,54 +1,21 @@
 import React, { useState } from "react";
 import {
-  Layout,
-  Table,
-  Button,
-  Dropdown,
-  Menu,
-  Typography,
-  Modal,
   Form,
   Input,
-  DatePicker,
   Select,
-  Upload,
+  DatePicker,
   InputNumber,
+  Upload,
+  Button,
 } from "antd";
-import {
-  MoreOutlined,
-  EditOutlined,
-  DeleteOutlined,
-  EyeOutlined,
-  PlusOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
-import Navbar from "../components/Navbar";
-import "@fontsource/poppins/400.css";
-import "@fontsource/poppins/500.css";
-import "@fontsource/poppins/600.css";
-import "../styles/Residents.css";
+import { UploadOutlined, PlusOutlined } from "@ant-design/icons";
 
-const { Title } = Typography;
-const { Content } = Layout;
 const { Option } = Select;
 const { TextArea } = Input;
 
-const Residents = () => {
-  const [residents, setResidents] = useState([
-    { key: "1", name: "Ravi Kumar", flat: "A-101", phone: "9876543210", email: "ravi.k@example.com" },
-    { key: "2", name: "Priya Sharma", flat: "B-202", phone: "9876543220", email: "priya.s@example.com" },
-    { key: "3", name: "Anil Reddy", flat: "C-303", phone: "9876543230", email: "anil.r@example.com" },
-  ]);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [ownershipType, setOwnershipType] = useState("");
+const Register = () => {
   const [form] = Form.useForm();
-
-  const handleMenuClick = (key, action) => {
-    if (action === "edit") alert(`Edit resident: ${key}`);
-    else if (action === "update") alert(`Update resident: ${key}`);
-    else if (action === "delete") setResidents(residents.filter((r) => r.key !== key));
-  };
+  const [ownershipType, setOwnershipType] = useState("");
 
 const handleAddResident = async (values) => {
   console.log("✅ Submitted Resident Data:", values);
@@ -75,84 +42,49 @@ const handleAddResident = async (values) => {
 };
 
 
-  const columns = [
-    { title: "Name", dataIndex: "name", key: "name" },
-    { title: "Flat No", dataIndex: "flat", key: "flat" },
-    { title: "Phone", dataIndex: "phone", key: "phone" },
-    { title: "Email", dataIndex: "email", key: "email" },
-    {
-      title: "Action",
-      key: "action",
-      align: "center",
-      render: (_, record) => {
-        const menu = (
-          <Menu>
-            <Menu.Item key="edit" icon={<EditOutlined />} onClick={() => handleMenuClick(record.key, "edit")}>
-              Edit
-            </Menu.Item>
-            <Menu.Item key="update" icon={<EyeOutlined />} onClick={() => handleMenuClick(record.key, "update")}>
-              Update
-            </Menu.Item>
-            <Menu.Item
-              key="delete"
-              danger
-              icon={<DeleteOutlined />}
-              onClick={() => handleMenuClick(record.key, "delete")}
-            >
-              Delete
-            </Menu.Item>
-          </Menu>
-        );
-
-        return (
-          <Dropdown overlay={menu} placement="bottomRight" trigger={["click"]}>
-            <Button type="text" icon={<MoreOutlined style={{ fontSize: "18px" }} />} />
-          </Dropdown>
-        );
-      },
-    },
-  ];
-
   return (
-    <div className="residents-page">
-      <Layout className="residents-layout">
-        <Navbar />
-        <Content className="residents-content">
-          {/* Header Section */}
-          <div className="residents-header">
-            <Title level={3} className="residents-title">
-              Residents
-            </Title>
+<div
+  style={{
+    position: "fixed",       // fill entire viewport
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    minHeight: "100vh",
+    width: "100vw",
+    backgroundColor: "#ffffffff",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "flex-start", // or "center" if you want vertical centering
+    overflowY: "auto",
+    padding: "40px 0",
+  }}
+>
 
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              className="add-resident-btn"
-              onClick={() => setIsModalOpen(true)}
-            >
-              New Resident
-            </Button>
-          </div>
-
-          {/* Residents Table */}
-          <Table
-            columns={columns}
-            dataSource={residents}
-            pagination={{ pageSize: 6 }}
-            bordered
-            className="residents-table"
-          />
-
-          {/* ✅ Add Resident Modal */}
-          <Modal
-            title="Add New Resident"
-            open={isModalOpen}
-            onCancel={() => setIsModalOpen(false)}
-            footer={null}
-            centered
-            width={750}
-            bodyStyle={{ maxHeight: "70vh", overflowY: "auto" }}
-          >
+      <div
+        style={{
+          width: "95%",
+          maxWidth: "1000px",
+          backgroundColor: "#fffef5",
+          padding: "30px 40px",
+          borderRadius: "16px",
+          border: "2px solid #ffdf98",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+          marginBottom: "40px",
+        }}
+      >
+        <h2
+          style={{
+            textAlign: "center",
+            color: "#1f2453",
+            marginBottom: "25px",
+            fontWeight: "700",
+            fontSize: "1.8rem",
+          }}
+        >
+        Resident Registration
+        </h2>
 
         <Form
           form={form}
@@ -457,11 +389,9 @@ const handleAddResident = async (values) => {
             </Button>
           </Form.Item>
         </Form>
-          </Modal>
-        </Content>
-      </Layout>
+      </div>
     </div>
   );
 };
 
-export default Residents;
+export default Register;

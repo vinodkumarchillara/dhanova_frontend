@@ -13,11 +13,17 @@ import { useNavigate } from "react-router-dom";
 import "@fontsource/poppins/400.css";
 import "@fontsource/poppins/500.css";
 import "@fontsource/poppins/600.css";
+import dhanovaLogo from "../assets/dhanova_logo.png"; // ✅ adjust path if needed
 
 const Navbar = () => {
   const navigate = useNavigate();
 
+  // ✅ Get user info from localStorage
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+  const fullname = user.fullname || "User";
+
   const handleLogout = () => {
+    localStorage.removeItem("user");
     navigate("/");
   };
 
@@ -76,21 +82,34 @@ const Navbar = () => {
           fontFamily: "'Poppins', sans-serif",
         }}
       >
-        {/* === Left Section (Clickable Dhanova) === */}
+        {/* === Left Section (Logo + Dhanova) === */}
         <button
           onClick={() => navigate("/dashboard")}
           style={{
-            fontSize: "20px",
-            fontWeight: 600,
-            color: "#1f2453",
-            letterSpacing: "0.5px",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
             border: "none",
             background: "transparent",
             cursor: "pointer",
             padding: 0,
           }}
         >
-          Dhanova
+          <img
+            src={dhanovaLogo}
+            alt="Dhanova Logo"
+            style={{ width: "40px", height: "40px", borderRadius: "8px" }}
+          />
+          <span
+            style={{
+              fontSize: "20px",
+              fontWeight: 600,
+              color: "#1f2453",
+              letterSpacing: "0.5px",
+            }}
+          >
+            Dhanova
+          </span>
         </button>
 
         {/* === Center Menu === */}
@@ -131,9 +150,9 @@ const Navbar = () => {
                 fontWeight: 600,
               }}
             >
-              VK
+              {fullname.charAt(0).toUpperCase()}
             </Avatar>
-            <span>Vinod Kumar</span>
+            <span>{fullname}</span>
             <DownOutlined style={{ fontSize: 12 }} />
           </Space>
         </Dropdown>
