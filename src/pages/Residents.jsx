@@ -27,6 +27,7 @@ import "@fontsource/poppins/400.css";
 import "@fontsource/poppins/500.css";
 import "@fontsource/poppins/600.css";
 import "../styles/Residents.css";
+import { toast } from "react-toastify";
 
 const { Title } = Typography;
 const { Content } = Layout;
@@ -63,14 +64,24 @@ const handleAddResident = async (values) => {
     const data = await response.json();
 
     if (response.ok) {
-      alert(data.message || "Resident registered successfully!");
+      toast.success(data.message || "Resident registered successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
       form.resetFields();
+      setIsModalOpen(false);
     } else {
-      alert(data.message || "Registration failed!");
+      toast.error(data.message || "Registration failed!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   } catch (err) {
     console.error("❌ Error:", err);
-    alert("Server not reachable. Try again later.");
+    toast.error("Server not reachable. Try again later.", {
+      position: "top-right",
+      autoClose: 3000,
+    });
   }
 };
 
