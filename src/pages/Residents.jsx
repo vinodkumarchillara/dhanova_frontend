@@ -5,14 +5,12 @@ import {
   Button,
   Dropdown,
   Menu,
-  Typography,
   Modal,
   Form,
   Input,
   DatePicker,
   Select,
   Upload,
-  InputNumber,
 } from "antd";
 import {
   MoreOutlined,
@@ -29,7 +27,6 @@ import "@fontsource/poppins/600.css";
 import "../styles/Residents.css";
 import { toast } from "react-toastify";
 
-const { Title } = Typography;
 const { Content } = Layout;
 const { Option } = Select;
 const { TextArea } = Input;
@@ -47,50 +44,38 @@ const Residents = () => {
 
   const handleMenuClick = (key, action) => {
     if (action === "edit") alert(`Edit resident: ${key}`);
-    else if (action === "update") alert(`Update resident: ${key}`);
+    else if (action === "update") alert(`View resident: ${key}`);
     else if (action === "delete") setResidents(residents.filter((r) => r.key !== key));
   };
 
-const handleAddResident = async (values) => {
-  console.log("✅ Submitted Resident Data:", values);
-
-  try {
-    const response = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      toast.success(data.message || "Resident registered successfully!", {
-        position: "top-right",
-        autoClose: 3000,
+  const handleAddResident = async (values) => {
+    console.log("✅ Submitted Resident Data:", values);
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
       });
-      form.resetFields();
-      setIsModalOpen(false);
-    } else {
-      toast.error(data.message || "Registration failed!", {
-        position: "top-right",
-        autoClose: 3000,
-      });
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(data.message || "Resident registered successfully!");
+        form.resetFields();
+        setIsModalOpen(false);
+      } else {
+        toast.error(data.message || "Registration failed!");
+      }
+    } catch (err) {
+      console.error("❌ Error:", err);
+      toast.error("Server not reachable. Try again later.");
     }
-  } catch (err) {
-    console.error("❌ Error:", err);
-    toast.error("Server not reachable. Try again later.", {
-      position: "top-right",
-      autoClose: 3000,
-    });
-  }
-};
-
+  };
 
   const columns = [
-    { title: "Name", dataIndex: "name", key: "name" },
-    { title: "Flat No", dataIndex: "flat", key: "flat" },
-    { title: "Phone", dataIndex: "phone", key: "phone" },
-    { title: "Email", dataIndex: "email", key: "email" },
+    { title: "Name", dataIndex: "name", key: "name", align: "center" },
+    { title: "Flat No", dataIndex: "flat", key: "flat", align: "center" },
+    { title: "Phone", dataIndex: "phone", key: "phone", align: "center" },
+    { title: "Email", dataIndex: "email", key: "email", align: "center" },
     {
       title: "Action",
       key: "action",
@@ -102,7 +87,7 @@ const handleAddResident = async (values) => {
               Edit
             </Menu.Item>
             <Menu.Item key="update" icon={<EyeOutlined />} onClick={() => handleMenuClick(record.key, "update")}>
-              Update
+              View
             </Menu.Item>
             <Menu.Item
               key="delete"
@@ -129,23 +114,32 @@ const handleAddResident = async (values) => {
       <Layout className="residents-layout">
         <Navbar />
         <Content className="residents-content">
-          {/* Header Section */}
-          <div className="residents-header">
-            <Title level={3} className="residents-title">
-              Residents
-            </Title>
-
+          {/* ✅ Button at Top-Left */}
+          <div
+            className="residents-header"
+            style={{
+              display: "flex",
+              justifyContent: "flex-start",
+              marginBottom: "16px",
+            }}
+          >
             <Button
               type="primary"
               icon={<PlusOutlined />}
               className="add-resident-btn"
               onClick={() => setIsModalOpen(true)}
+              style={{
+                backgroundColor: "#ffdf98",
+                color: "#1f2453",
+                fontWeight: 600,
+                border: "none",
+              }}
             >
               New Resident
             </Button>
           </div>
 
-          {/* Residents Table */}
+          {/* ✅ Residents Table */}
           <Table
             columns={columns}
             dataSource={residents}
@@ -162,312 +156,85 @@ const handleAddResident = async (values) => {
             footer={null}
             centered
             width={750}
-            bodyStyle={{ maxHeight: "70vh", overflowY: "auto" }}
+            bodyStyle={{ maxHeight: "70vh", overflowY: "auto", backgroundColor: "#fffef5" }}
           >
+            <Form form={form} layout="vertical" onFinish={handleAddResident}>
+              {/* Resident Info */}
+              <Form.Item label="Full Name" name="fullName" rules={[{ required: true }]}>
+                <Input placeholder="As per Aadhar" />
+              </Form.Item>
 
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleAddResident}
-          style={{ backgroundColor: "#fffef5" }}
-        >
-          {/* ================= Resident Info ================= */}
-          <Form.Item label="Full Name" name="fullName" rules={[{ required: true }]}>
-            <Input placeholder="As per Aadhar" />
-          </Form.Item>
-<Form.Item
-  label="Gender"
-  name="gender"
-  rules={[{ required: true, message: "Please select gender" }]}
->
-  <Select placeholder="Select Gender">
-    <Option value="Male">Male</Option>
-    <Option value="Female">Female</Option>
-    <Option value="Other">Other</Option>
-  </Select>
-</Form.Item>
+              <Form.Item label="Gender" name="gender" rules={[{ required: true }]}>
+                <Select placeholder="Select Gender">
+                  <Option value="Male">Male</Option>
+                  <Option value="Female">Female</Option>
+                  <Option value="Other">Other</Option>
+                </Select>
+              </Form.Item>
 
-
-          <Form.Item label="Date of Birth" name="dob" rules={[{ required: true }]}>
-            <DatePicker style={{ width: "100%" }} />
-          </Form.Item>
-
-          <Form.Item label="Phone Number" name="phone" rules={[{ required: true }]}>
-            <Input placeholder="Please Enter Phone Number" type="number" />
-          </Form.Item>
-
-          <Form.Item label="Alternate Number" name="alternateNumber">
-            <Input placeholder="Please Enter Alternate Phone Number" type="number" />
-          </Form.Item>
-
-          <Form.Item label="Email ID" name="email" rules={[{ required: true, type: "email" }]}>
-            <Input placeholder="Please Enter Email Id" />
-          </Form.Item>
-
-          <Form.Item label="Aadhar Number" name="aadhar" rules={[{ required: true }]}>
-            <Input placeholder="Please Enter Aadhar Card Number" maxLength={12} />
-          </Form.Item>
-
-          <Form.Item label="Address (Permanent)" name="address" rules={[{ required: true }]}>
-            <TextArea placeholder="Please Enter Your Address" rows={3} />
-          </Form.Item>
-
-          <Form.Item label="Occupation" name="occupation">
-            <Input placeholder="Please Enter Your Occupation" />
-          </Form.Item>
-
-<Form.Item
-  label="Ownership Type"
-  name="ownershipType"
-  rules={[{ required: true, message: "Please select ownership type" }]}
->
-  <Select
-    placeholder="Select Ownership Type"
-    onChange={(value) => setOwnershipType(value)}
-  >
-    <Option value="Owner">Owner</Option>
-    <Option value="Tenant">Tenant</Option>
-  </Select>
-</Form.Item>
-
-
-          {ownershipType === "Tenant" && (
-            <>
-              <Form.Item label="Tenant Start Date" name="tenantStartDate" rules={[{ required: true }]}>
+              <Form.Item label="Date of Birth" name="dob" rules={[{ required: true }]}>
                 <DatePicker style={{ width: "100%" }} />
               </Form.Item>
 
-              <Form.Item label="Tenant End Date" name="tenantEndDate" rules={[{ required: true }]}>
-                <DatePicker style={{ width: "100%" }} />
+              <Form.Item label="Phone Number" name="phone" rules={[{ required: true }]}>
+                <Input placeholder="Enter Phone Number" type="number" />
               </Form.Item>
-            </>
-          )}
 
-          <Form.Item label="Photo Upload" name="photo">
-            <Upload beforeUpload={() => false}>
-              <Button icon={<UploadOutlined />}>Upload Photo</Button>
-            </Upload>
-          </Form.Item>
+              <Form.Item label="Email ID" name="email" rules={[{ required: true, type: "email" }]}>
+                <Input placeholder="Enter Email ID" />
+              </Form.Item>
 
-          <Form.Item label="ID Proof Upload" name="idProof">
-            <Upload beforeUpload={() => false}>
-              <Button icon={<UploadOutlined />}>Upload ID Proof</Button>
-            </Upload>
-          </Form.Item>
+              <Form.Item label="Aadhar Number" name="aadhar" rules={[{ required: true }]}>
+                <Input placeholder="Enter Aadhar Number" maxLength={12} />
+              </Form.Item>
 
-<Form.Item
-  label="Ownership Status"
-  name="ownershipStatus"
-  rules={[{ required: true, message: "Please select ownership status" }]}
->
-  <Select placeholder="Select Status">
-    <Option value="Self">Self</Option>
-    <Option value="Rented">Rented</Option>
-  </Select>
-</Form.Item>
+              <Form.Item label="Address" name="address" rules={[{ required: true }]}>
+                <TextArea placeholder="Enter Permanent Address" rows={3} />
+              </Form.Item>
 
+              <Form.Item label="Ownership Type" name="ownershipType" rules={[{ required: true }]}>
+                <Select onChange={(value) => setOwnershipType(value)} placeholder="Select Ownership Type">
+                  <Option value="Owner">Owner</Option>
+                  <Option value="Tenant">Tenant</Option>
+                </Select>
+              </Form.Item>
 
+              {ownershipType === "Tenant" && (
+                <>
+                  <Form.Item label="Tenant Start Date" name="tenantStartDate" rules={[{ required: true }]}>
+                    <DatePicker style={{ width: "100%" }} />
+                  </Form.Item>
+                  <Form.Item label="Tenant End Date" name="tenantEndDate" rules={[{ required: true }]}>
+                    <DatePicker style={{ width: "100%" }} />
+                  </Form.Item>
+                </>
+              )}
 
-          <Form.Item label="Flat Number" name="flatNumber" rules={[{ required: true }]}>
-            <Input placeholder="Please Enter Flat Number" />
-          </Form.Item>
+              <Form.Item label="Photo Upload" name="photo">
+                <Upload beforeUpload={() => false}>
+                  <Button icon={<UploadOutlined />}>Upload Photo</Button>
+                </Upload>
+              </Form.Item>
 
-          <Form.Item label="Floor" name="floor" rules={[{ required: true }]}>
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Please Enter Your Floor" />
-          </Form.Item>
-
-          <Form.Item label="Parking Slots" name="parkingSlots">
-            <InputNumber min={0} style={{ width: "100%" }} />
-          </Form.Item>
-
-          <Form.Item label="Vehicle Details" name="vehicles">
-            <TextArea placeholder="Please Enter Vehicle Details" rows={2} />
-          </Form.Item>
-
-<Form.Item
-  label="Ownership Status"
-  name="ownershipStatus"
-  rules={[{ required: true, message: "Please select ownership status" }]}
->
-  <Select placeholder="Select Status">
-    <Option value="Self">Self</Option>
-    <Option value="Rented">Rented</Option>
-  </Select>
-</Form.Item>
-
-
-          {/* ================= Family Info ================= */}
-          <h3
-            style={{
-              color: "#1f2453",
-              borderBottom: "2px solid #ffdf98",
-              paddingBottom: 5,
-              marginTop: 30,
-            }}
-          >
-            Family Member Information
-          </h3>
-
-          <Form.List name="familyMembers">
-            {(fields, { add, remove }) => (
-              <>
-                {fields.map(({ key, name, ...restField }, index) => (
-                  <div
-                    key={key}
-                    style={{
-                      border: "1px solid #ffdf98",
-                      padding: "15px",
-                      borderRadius: "10px",
-                      marginBottom: "15px",
-                      background: "#fffef5",
-                    }}
-                  >
-                    <h4 style={{ color: "#1f2453", marginBottom: 10 }}>
-                      Family Member {index + 1}
-                    </h4>
-
-                    <Form.Item {...restField} label="Name" name={[name, "name"]} rules={[{ required: true }]}>
-                      <Input placeholder="Please Enter Name" />
-                    </Form.Item>
-
-<Form.Item
-  {...restField}
-  label="Relation"
-  name={[name, "relation"]}
-  rules={[{ required: true, message: "Please select relation" }]}
->
-  <Select placeholder="Select Relation">
-    <Option value="Spouse">Spouse</Option>
-    <Option value="Son">Son</Option>
-    <Option value="Daughter">Daughter</Option>
-    <Option value="Parent">Parent</Option>
-    <Option value="Other">Other</Option>
-  </Select>
-</Form.Item>
-
-<Form.Item
-  {...restField}
-  label="Gender"
-  name={[name, "gender"]}
-  rules={[{ required: true, message: "Please select gender" }]}
->
-  <Select placeholder="Select Gender">
-    <Option value="Male">Male</Option>
-    <Option value="Female">Female</Option>
-    <Option value="Other">Other</Option>
-  </Select>
-</Form.Item>
-
-
-                    <Form.Item {...restField} label="Age" name={[name, "age"]}>
-                      <InputNumber min={0} style={{ width: "100%" }} placeholder="Please Enter Age" />
-                    </Form.Item>
-
-                    <Form.Item {...restField} label="Mobile Number" name={[name, "mobile"]}>
-                      <Input placeholder="Please Enter Phone Number" type="number" />
-                    </Form.Item>
-
-                    <Form.Item {...restField} label="Aadhar Number" name={[name, "aadhar"]}>
-                      <Input placeholder="Please Enter Aadhar Number" maxLength={12} />
-                    </Form.Item>
-
-                    <Form.Item {...restField} label="Photo Upload" name={[name, "photo"]}>
-                      <Upload beforeUpload={() => false}>
-                        <Button icon={<UploadOutlined />}>Upload Photo</Button>
-                      </Upload>
-                    </Form.Item>
-
-                    <Form.Item {...restField} label="Remarks" name={[name, "remarks"]}>
-                      <TextArea placeholder="Elderly / Special Notes" rows={2} />
-                    </Form.Item>
-
-                    <Button
-                      type="dashed"
-                      danger
-                      onClick={() => remove(name)}
-                      block
-                      style={{
-                        marginTop: "10px",
-                        color: "#b30000",
-                        borderColor: "#b30000",
-                      }}
-                    >
-                      Remove Family Member
-                    </Button>
-                  </div>
-                ))}
-
-                <Form.Item>
-                  <Button
-                    type="dashed"
-                    onClick={() => add()}
-                    block
-                    icon={<PlusOutlined />}
-                    style={{
-                      borderColor: "#ffdf98",
-                      color: "#1f2453",
-                      fontWeight: 500,
-                    }}
-                  >
-                    Add Family Member
-                  </Button>
-                </Form.Item>
-              </>
-            )}
-          </Form.List>
-
-          {/* ================= Emergency Info ================= */}
-          <h3
-            style={{
-              color: "#1f2453",
-              borderBottom: "2px solid #ffdf98",
-              paddingBottom: 5,
-              marginTop: 30,
-            }}
-          >
-            Emergency Contact Information
-          </h3>
-
-          <Form.Item label="Emergency Contact Name" name="emergencyName" rules={[{ required: true }]}>
-            <Input placeholder="Please Enter Name" />
-          </Form.Item>
-
-          <Form.Item label="Emergency Contact Number" name="emergencyNumber" rules={[{ required: true }]}>
-            <Input placeholder="Please Enter Phone Number" type="number" />
-          </Form.Item>
-
-<Form.Item
-  label="Emergency Relation"
-  name="emergencyRelation"
-  rules={[{ required: true, message: "Please select emergency relation" }]}
->
-  <Select placeholder="Select Relation">
-    <Option value="Brother">Brother</Option>
-    <Option value="Friend">Friend</Option>
-    <Option value="Other">Other</Option>
-  </Select>
-</Form.Item>
-
-
-          {/* ================= Submit ================= */}
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              block
-              style={{
-                backgroundColor: "#ffdf98",
-                color: "#1f2453",
-                fontWeight: 600,
-                border: "none",
-                height: "45px",
-                marginTop: "25px",
-              }}
-            >
-              Submit Resident
-            </Button>
-          </Form.Item>
-        </Form>
+              {/* ✅ Submit */}
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  block
+                  style={{
+                    backgroundColor: "#ffdf98",
+                    color: "#1f2453",
+                    fontWeight: 600,
+                    border: "none",
+                    height: "45px",
+                    marginTop: "15px",
+                  }}
+                >
+                  Submit Resident
+                </Button>
+              </Form.Item>
+            </Form>
           </Modal>
         </Content>
       </Layout>

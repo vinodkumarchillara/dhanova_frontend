@@ -1,0 +1,86 @@
+.events-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("../assets/events_bg.png"); /* 👈 adjust if needed */
+  background-size: 110%; /* 🔍 subtle zoom */
+  background-position: center;
+  background-repeat: no-repeat;
+  font-family: "Poppins", sans-serif;
+  overflow: hidden;
+  transition: background-size 0.8s ease;
+}
+
+/* ✨ Add thin overlay for readability */
+.events-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.35); 
+  z-index: 0;
+}
+
+/* ✅ Ensure layout stays above overlay */
+.events-layout {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  background: none !important;
+}
+.events-page:hover {
+  background-size: 115%;
+}
+
+
+.events-content {
+  margin-top: 120px;
+  padding: 40px 80px;
+  background: none !important; /* ensures full transparency */
+}
+
+.events-container {
+  background: none; /* ❌ no white box */
+  padding: 30px;
+  border-radius: 12px;
+}
+
+.events-header {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.events-title {
+  color: #1f2453;
+  font-weight: 600;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.book-btn {
+  background-color: #ff9801 !important;
+  color: #1f2453 !important;
+  font-weight: 600;
+  border: none !important;
+  transition: 0.2s ease;
+}
+
+.book-btn:hover {
+  background-color: #ffe9b5 !important;
+}
+
+.events-table {
+  border: 1px solid #ff9801;
+  background-color: rgba(255, 251, 234, 0.9); /* very light yellow for contrast */
+}
+
+.events-table th {
+  background-color: #ff9801 !important;
+  color: #1f2453 !important;
+  font-weight: 600;
+  text-align: center !important;
+}
+
+.events-table td {
+  text-align: center;
+}

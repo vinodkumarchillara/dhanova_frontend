@@ -1,8 +1,8 @@
-.residents-page {
+.admin-events-page {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background-image: url("../assets/residents_bg.png");
+  background-image: url("../assets/events_bg.png");
   background-size: 110%; /* 🔍 Slight zoom effect */
   background-position: center;
   background-repeat: no-repeat;
@@ -12,55 +12,57 @@
 }
 
 /* ✨ Thin subtle overlay */
-.residents-page::before {
+.admin-events-page::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.35); /* 🤍 soft translucent white overlay */
+  background: rgba(255, 255, 255, 0.35); 
   z-index: 0;
 }
 
-/* Ensure content appears above overlay */
-.residents-layout {
+/* ✅ Ensure layout/content appear above overlay */
+.admin-events-layout {
   position: relative;
   z-index: 1;
-  background: none !important;
+  background: transparent !important;
+}
+.admin-events-page:hover {
+  background-size: 115%;
 }
 
 
-.residents-content {
+.admin-events-content {
   margin-top: 120px;
   padding: 40px 80px;
+  background: transparent;
 }
 
-.residents-header {
+.admin-events-header {
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  justify-content: flex-start; /* left side button */
   margin-bottom: 25px;
 }
 
-.add-resident-btn {
+.add-event-btn {
   background-color: #ff9801 !important;
   color: #1f2453 !important;
   font-weight: 600;
   border: none !important;
-  border-radius: 6px;
-  box-shadow: 0 2px 5px rgba(31, 36, 83, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-.residents-table {
+.admin-events-table {
   border: 1px solid #ff9801;
   background-color: #fffbea;
 }
 
-.residents-table th {
+.admin-events-table th {
   background-color: #ff9801 !important;
   color: #1f2453 !important;
   font-weight: 600;
   text-align: center !important;
 }
 
-.residents-table td {
+.admin-events-table td {
   text-align: center;
 }

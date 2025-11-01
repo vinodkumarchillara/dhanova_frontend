@@ -8,6 +8,7 @@ import {
   BellOutlined,
   ApartmentOutlined,
   IdcardOutlined,
+  CalendarOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import "@fontsource/poppins/400.css";
@@ -30,9 +31,10 @@ const Navbar = () => {
   const handleMenuClick = (e) => {
     if (e.key === "residents") navigate("/residents");
     if (e.key === "security") navigate("/security");
-    if (e.key === "events") navigate("/events");
     if (e.key === "amenities") navigate("/amenities");
     if (e.key === "employees") navigate("/employees");
+    if (e.key === "adminEvents") navigate("/events/admin");
+    if (e.key === "residentBookings") navigate("/events/residents");
   };
 
   const userMenu = (
@@ -49,6 +51,25 @@ const Navbar = () => {
           label: <span style={{ color: "red" }}>Logout</span>,
           icon: <LogoutOutlined style={{ color: "red" }} />,
           onClick: handleLogout,
+        },
+      ]}
+    />
+  );
+
+  // ✅ Events submenu
+  const eventSubMenu = (
+    <Menu
+      onClick={handleMenuClick}
+      items={[
+        {
+          key: "adminEvents",
+          label: "Admin Events",
+          icon: <CalendarOutlined />,
+        },
+        {
+          key: "residentBookings",
+          label: "Resident Bookings",
+          icon: <BellOutlined />,
         },
       ]}
     />
@@ -127,7 +148,17 @@ const Navbar = () => {
           items={[
             { key: "residents", icon: <TeamOutlined />, label: "Residents" },
             { key: "security", icon: <IdcardOutlined />, label: "Security" },
-            { key: "events", icon: <BellOutlined />, label: "Events" },
+            {
+              key: "events",
+              icon: <BellOutlined />,
+              label: (
+                <Dropdown overlay={eventSubMenu} trigger={["click"]}>
+                  <span>
+                    Events <DownOutlined style={{ fontSize: 12 }} />
+                  </span>
+                </Dropdown>
+              ),
+            },
             { key: "amenities", icon: <ApartmentOutlined />, label: "Amenities" },
             { key: "employees", icon: <UserOutlined />, label: "Employees" },
           ]}

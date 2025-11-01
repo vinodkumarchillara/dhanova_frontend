@@ -1,3 +1,25 @@
+/* 🌐 Global reset and full height */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #0b33d3ff; /* Blue background like your layout */
+  overflow: hidden; /* Prevent double scrollbars */
+}
+
+/* 🧩 Typography */
 body {
   font-family: "Poppins", sans-serif;
+}
+
+/* Optional – make sure tables and cards look clean */
+.ant-table {
+  background: white;
+  border-radius: 12px;
+}
+
+.ant-card {
+  border-radius: 16px;
 }
